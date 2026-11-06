@@ -22,6 +22,11 @@
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.65 var(--body); -webkit-font-smoothing: antialiased; }
 html.theme-ready body { transition: background-color .25s ease, color .25s ease; }
+html.theme-ready *, html.theme-ready *::before, html.theme-ready *::after {
+  transition-property: color, background-color, border-color, box-shadow, fill, stroke;
+  transition-duration: .28s;
+  transition-timing-function: ease;
+}
 a { color: inherit; text-decoration: none; }
 button, input, textarea { font: inherit; }
 button { color: inherit; }
@@ -111,6 +116,69 @@ button { color: inherit; }
 .about-copy p { margin: 0 0 15px; color: var(--muted); font-size: 14px; line-height: 1.85; }
 .inline-link { display: inline-flex; align-items: center; gap: 9px; margin-top: 5px; padding-bottom: 4px; border-bottom: 1px solid var(--line); color: var(--ink); font-size: 12px; font-weight: 700; }
 .inline-link:hover { border-color: var(--ink); }
+
+.resume-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding-block: 12px; border-block: 1px solid var(--line); }
+.resume-toolbar button { min-height: 36px; padding: 7px 11px; border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 11px; cursor: pointer; }
+.resume-toolbar button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.resume-toolbar-spacer { flex: 1; }
+.resume-page-header { width: min(1200px, calc(100% - 56px)); margin: 24px auto 0; }
+.resume-page-header a { color: var(--muted); font-size: 11px; }
+.resume-page-header a:hover { color: var(--ink); }
+.resume-status { min-height: 18px; margin: 8px 0; color: var(--muted); font-size: 11px; }
+.resume-document { max-width: 900px; margin: 20px auto 0; padding: clamp(22px, 5vw, 52px); border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow); }
+.resume-header { padding-bottom: 14px; border-bottom: 2px solid var(--ink); }
+.resume-header h3 { margin: 0; font: 700 30px/1.1 var(--display); letter-spacing: -.04em; }
+.resume-header p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+.resume-header a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
+.resume-document h4 { margin: 20px 0 7px; padding-bottom: 4px; border-bottom: 1px solid var(--line); font: 700 12px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.resume-document p, .resume-document li { color: var(--muted); font-size: 12px; line-height: 1.65; }
+.resume-document p { margin: 5px 0; }
+.resume-document strong, .resume-document h5 { color: var(--ink); }
+.resume-entry { margin: 10px 0 14px; }
+.resume-entry h5 { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px 15px; margin: 0 0 4px; font: 700 13px var(--display); }
+.resume-entry h5 span { color: var(--muted); font: 10px var(--mono); }
+.resume-entry ul { margin: 4px 0; padding-left: 18px; }
+.resume-markdown { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: pre; }
+
+@media print {
+  @page { size: A4; margin: 10mm; }
+  html, body { min-height: 0 !important; background: #fff !important; color: #111 !important; }
+  body.printing-resume * { visibility: hidden !important; }
+  body.printing-resume #resume,
+  body.printing-resume #resume * { visibility: visible !important; }
+  body.printing-resume #resume { position: relative; inset: auto; width: 100%; padding: 0; overflow: visible; background: #fff !important; color: #111 !important; }
+  body.printing-resume #resume .page-width { width: 100%; }
+  body.printing-resume #resume .section-heading,
+  body.printing-resume #resume .resume-toolbar,
+  body.printing-resume #resume .resume-status { display: none !important; }
+  body.printing-resume #resume .resume-document { max-width: none; margin: 0; padding: 0; border: 0; box-shadow: none; background: #fff !important; color: #111 !important; }
+  body.printing-resume #resume .resume-document p,
+  body.printing-resume #resume .resume-document li,
+  body.printing-resume #resume .resume-entry h5 span { color: #333 !important; }
+  body.printing-resume #resume .resume-document h3,
+  body.printing-resume #resume .resume-document h4,
+  body.printing-resume #resume .resume-document h5,
+  body.printing-resume #resume .resume-document strong,
+  body.printing-resume #resume .resume-header a { color: #111 !important; }
+  body.printing-resume #resume [hidden] { display: none !important; }
+  body.printing-resume #resume [data-resume-document="short"] { font-size: 9pt; }
+  body.printing-resume #resume [data-resume-document="short"] .resume-header h3 { font-size: 21pt; }
+  body.printing-resume #resume [data-resume-document="short"] h4 { margin-top: 10px; font-size: 9pt; }
+  body.printing-resume #resume [data-resume-document="short"] p,
+  body.printing-resume #resume [data-resume-document="short"] li { font-size: 8.5pt; line-height: 1.35; }
+  body.printing-resume #resume [data-resume-document="short"] .resume-entry { margin: 6px 0 8px; }
+  body.printing-resume #resume [data-resume-document="short"] .resume-entry h5 { font-size: 9.5pt; }
+  body.printing-resume #resume [data-resume-document="short"] .resume-header { padding-bottom: 7px; }
+  body.printing-resume #resume [data-resume-document="short"] .resume-header p { margin-top: 3px; font-size: 8.5pt; }
+  body.printing-resume #resume [data-resume-document="short"] h4 { margin: 6px 0 3px; }
+  body.printing-resume #resume [data-resume-document="short"] ul { margin: 2px 0 5px; padding-left: 14px; }
+  body.printing-resume #resume [data-resume-document="full"] .resume-entry:nth-of-type(2) { break-before: page; page-break-before: always; }
+}
+
+@media (max-width: 620px) {
+  .resume-page-header { width: calc(100% - 36px); }
+  .resume-toolbar-spacer { flex-basis: 100%; }
+}
 
 .experience-list { margin-left: 213px; border-top: 1px solid var(--line); }
 .experience-item { display: grid; grid-template-columns: 150px 1fr; gap: 30px; padding: 25px 0; border-bottom: 1px solid var(--line); transition: padding .25s ease, background .25s ease; }
