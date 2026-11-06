@@ -9,6 +9,7 @@ A responsive developer portfolio built with the Next.js App Router. The page con
 - Responsive navigation and a light/dark theme toggle that remembers the selected theme
 - Reduced-motion-aware entrance and scroll animations
 - Contact links and an email-based contact form
+- Separate `/resume` page with full and one-page views, Markdown copy, and print-to-PDF controls
 - Search-friendly page structure rendered by Next.js
 
 ## Getting started
@@ -33,6 +34,7 @@ npm start
 
 - `app/` — Next.js layout, page entry point, interactive behavior, and Motion effects
 - `content/portfolio.html` — portfolio content and semantic page markup
+- `content/resume.html` — resume page content
 - `styles.css` — responsive visual design and light/dark theme styles
 - `app/globals.css` — Tailwind CSS entry point
 

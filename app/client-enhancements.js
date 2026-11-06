@@ -9,6 +9,9 @@ export default function ClientEnhancements() {
     const themeButton = document.querySelector('.theme-toggle');
     const themeIcon = document.querySelector('.theme-icon');
     const contactForm = document.querySelector('#contact-form');
+    const resumeViews = [...document.querySelectorAll('[data-resume-view]')];
+    const resumeDocuments = [...document.querySelectorAll('[data-resume-document]')];
+    const resumeStatus = document.querySelector('.resume-status');
     const cleanup = [];
 
     const year = document.querySelector('#year');
@@ -142,6 +145,58 @@ export default function ClientEnhancements() {
       };
       contactForm.addEventListener('submit', submitContact);
       cleanup.push(() => contactForm.removeEventListener('submit', submitContact));
+    }
+
+    if (resumeViews.length) {
+      const selectResume = (view) => {
+        resumeViews.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.resumeView === view)));
+        resumeDocuments.forEach((document) => { document.hidden = document.dataset.resumeDocument !== view; });
+      };
+      resumeViews.forEach((button) => {
+        const handleClick = () => selectResume(button.dataset.resumeView);
+        button.addEventListener('click', handleClick);
+        cleanup.push(() => button.removeEventListener('click', handleClick));
+      });
+
+      const copyButton = document.querySelector('[data-resume-copy]');
+      if (copyButton) {
+        const copyResume = async () => {
+          const selected = document.querySelector('[data-resume-view][aria-pressed="true"]')?.dataset.resumeView || 'full';
+          const markdown = document.querySelector(`[data-resume-markdown="${selected}"]`);
+          let copied = false;
+          try {
+            if (navigator.clipboard?.writeText) {
+              await navigator.clipboard.writeText(markdown?.value || '');
+              copied = true;
+            }
+          } catch { /* Fall through to the browser copy command. */ }
+          if (!copied && markdown) {
+            try {
+              markdown.focus();
+              markdown.select();
+              copied = document.execCommand('copy');
+              markdown.blur();
+            } catch { /* Report that copying was blocked. */ }
+          }
+          if (resumeStatus) resumeStatus.textContent = copied
+            ? `${selected === 'short' ? 'One-page' : 'Full'} resume copied as Markdown.`
+            : 'Could not copy automatically. Select the resume text and copy it manually.';
+        };
+        copyButton.addEventListener('click', copyResume);
+        cleanup.push(() => copyButton.removeEventListener('click', copyResume));
+      }
+
+      const printButton = document.querySelector('[data-resume-print]');
+      if (printButton) {
+        const printResume = () => {
+          const finishPrint = () => document.body.classList.remove('printing-resume');
+          window.addEventListener('afterprint', finishPrint, { once: true });
+          document.body.classList.add('printing-resume');
+          window.print();
+        };
+        printButton.addEventListener('click', printResume);
+        cleanup.push(() => printButton.removeEventListener('click', printResume));
+      }
     }
 
     return () => cleanup.forEach((dispose) => dispose());
